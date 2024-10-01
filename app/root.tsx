@@ -1,4 +1,5 @@
 import {
+  Link,
   Links,
   Meta,
   Outlet,
@@ -32,7 +33,15 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Links />
       </head>
       <body>
-        {children}
+        <header className="bg-gray-900 py-4">
+          <nav className="md:container mx-auto flex justify-between w-full items-center">
+            <Link to="/posts">
+              <h1 className="font-bold text-4xl">Remix</h1>
+            </Link>
+            <Link to="posts">Posts</Link>
+          </nav>
+        </header>
+        <main className="md:container mx-auto">{children}</main>
         <ScrollRestoration />
         <Scripts />
       </body>

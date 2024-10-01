@@ -1,0 +1,43 @@
+[
+  {
+    "id": "root",
+    "path": "",
+    "file": "root.tsx",
+    "children": [
+      {
+        "id": "routes/_index",
+        "index": true,
+        "file": "routes/_index/route.tsx"
+      },
+      {
+        "id": "routes/posts",
+        "path": "posts",
+        "file": "routes/posts/route.tsx",
+        "children": [
+          {
+            "id": "routes/posts._index",
+            "index": true,
+            "file": "routes/posts._index/route.tsx"
+          },
+          {
+            "id": "routes/posts.$id",
+            "path": ":id",
+            "file": "routes/posts.$id/route.tsx",
+            "children": [
+              {
+                "id": "routes/posts.$id.edit",
+                "path": "edit",
+                "file": "routes/posts.$id.edit/route.tsx"
+              }
+            ]
+          },
+          {
+            "id": "routes/posts.new",
+            "path": "new",
+            "file": "routes/posts.new/route.tsx"
+          }
+        ]
+      }
+    ]
+  }
+]
