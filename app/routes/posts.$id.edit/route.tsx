@@ -1,7 +1,8 @@
+import { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { Form, redirect, useLoaderData } from "@remix-run/react";
 import { db } from "~/utils/db.server";
 
-export async function loader({ params }) {
+export async function loader({ params }: LoaderFunctionArgs) {
   const post = await db.post.findUnique({
     where: {
       id: params.id,
@@ -37,7 +38,7 @@ export default function Edit() {
   );
 }
 
-export async function action({ params, request }) {
+export async function action({ params, request }: ActionFunctionArgs) {
   const data = await request.formData();
   const formData = Object.fromEntries(data);
   const updatedPost = await db.post.update({

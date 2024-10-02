@@ -1,7 +1,22 @@
-import { Form, json, redirect, useActionData } from "@remix-run/react";
+import { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
+import {
+  Form,
+  json,
+  redirect,
+  useActionData,
+  useLoaderData,
+} from "@remix-run/react";
 import { db } from "~/utils/db.server";
 
+export async function loader({ params }: LoaderFunctionArgs) {
+  const users = await db.user.findMany({});
+  const user = users[0].id;
+  console.log(user);
+  return user;
+}
+
 export default function NewPost() {
+  const user = useLoaderData<typeof loader>();
   const actionData = useActionData<typeof action>();
   return (
     <Form
@@ -15,6 +30,7 @@ export default function NewPost() {
           placeholder="Title"
           className="border py-4 px-2"
         />
+        <input type="text" name="userId" value={user} />
         <p className="text-red-300">{actionData?.fieldErrors?.title}</p>
         <textarea
           name="body"
@@ -40,21 +56,33 @@ function validateBody(body: string) {
   }
 }
 
-export async function action({ request }) {
+export async function action({ request }: ActionFunctionArgs) {
   const data = await request.formData();
   const formData = Object.fromEntries(data);
 
+  const title = formData.title.toString();
+  const body = formData.body.toString();
+  const userId = formData.userId?.toString();
+
   const fieldErrors = {
-    title: validateTitle(formData.title),
-    body: validateBody(formData.body),
+    title: validateTitle(title),
+    body: validateBody(body),
   };
 
   if (Object.values(fieldErrors).some(Boolean)) {
     console.log(fieldErrors);
-    return json({ fieldErrors, formData }, { status: 400 });
+    return json({ fieldErrors }, { status: 400 });
   }
 
-  const post = await db.post.create({ data: formData });
+  const post = await db.post.create({
+    data: {
+      title,
+      body,
+      user: {
+        connect: { id: userId },
+      },
+    },
+  });
 
   return redirect(`/posts/${post.id}`);
 }

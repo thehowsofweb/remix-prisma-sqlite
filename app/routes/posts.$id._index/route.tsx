@@ -1,10 +1,5 @@
-import {
-  Form,
-  Link,
-  redirect,
-  useActionData,
-  useLoaderData,
-} from "@remix-run/react";
+import { ActionFunctionArgs } from "@remix-run/node";
+import { Form, Link, redirect, useLoaderData } from "@remix-run/react";
 import { LoaderFunctionArgs } from "react-router";
 import { db } from "~/utils/db.server";
 
@@ -37,7 +32,7 @@ export default function Post() {
   );
 }
 
-export async function action({ params }) {
+export async function action({ params }: ActionFunctionArgs) {
   const post = await db.post.delete({
     where: {
       id: params.id,
